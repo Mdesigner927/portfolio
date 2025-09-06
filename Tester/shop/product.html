@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جزئیات محصول 🌸</title>
+<style>
+body{margin:0;font-family:Tahoma,sans-serif;background:#fff8fb;padding:12px;color:#222;}
+h1,h2{color:#ff5b93;}
+.container{max-width:720px;margin:auto;display:flex;flex-direction:column;gap:12px;}
+img{width:100%;border-radius:12px;object-fit:cover;}
+.price{font-weight:bold;color:#ff5b93;font-size:1.1rem;}
+.stock{color:#666;font-size:13px;}
+button,.btn{padding:8px 12px;border:none;border-radius:8px;background:#ff5b93;color:#fff;cursor:pointer;transition:0.25s;text-decoration:none;}
+button:hover,.btn:hover{background:#ff357f;}
+textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;font-family:Tahoma;resize:none;}
+.comment-list{list-style:none;padding:0;margin:0;}
+.comment-list li{border-bottom:1px dashed #eee;padding:6px 0;font-size:13px;}
+.actions{display:flex;gap:8px;flex-wrap:wrap;}
+.similar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px;}
+.similar-card{background:#fff;padding:8px;border-radius:8px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+.similar-card img{width:100%;height:100px;object-fit:cover;border-radius:6px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 id="productName">محصول</h1>
+  <img id="productImage" src="" alt="محصول">
+  <div class="price" id="productPrice">۰ تومان</div>
+  <div class="stock" id="productStock">موجودی: 0</div>
+  <div id="productDescription">توضیحات محصول...</div>
+
+  <h2>نظرات</h2>
+  <ul id="commentList" class="comment-list"></ul>
+  <textarea id="newComment" rows="3" placeholder="نظر خود را وارد کنید..."></textarea>
+  <button id="addCommentBtn">ثبت نظر</button>
+
+  <div class="actions">
+    <button id="addToCartBtn">افزودن به سبد خرید</button>
+    <a href="cart.html" id="showCartBtn" class="btn">🛒 سبد خرید</a>
+  </div>
+
+  <h2>محصولات مشابه</h2>
+  <div id="similarProducts" class="similar-grid"></div>
+</div>
+
+<script>
+// --- داده‌ها ---
+let products = JSON.parse(localStorage.getItem("products")||"[]");
+let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+const urlParams = new URLSearchParams(window.location.search);
+const prodId = urlParams.get("id");
+const product = products.find(p=>p.id===prodId);
+
+// --- بارگذاری محصول ---
+if(product){
+  document.getElementById("productName").textContent = product.name;
+  document.getElementById("productImage").src = product.image;
+  document.getElementById("productPrice").textContent = product.price.toLocaleString()+" تومان";
+  document.getElementById("productStock").textContent = "موجودی: "+product.stock;
+  document.getElementById("productDescription").textContent = product.description||"توضیحات محصول...";
+}
+
+// --- افزودن به سبد خرید ---
+document.getElementById("addToCartBtn").addEventListener("click",()=>{
+  if(product.stock>0){
+    cart.push({...product});
+    product.stock--;
+    localStorage.setItem("cart",JSON.stringify(cart));
+    localStorage.setItem("products",JSON.stringify(products));
+    document.getElementById("productStock").textContent = "موجودی: "+product.stock;
+    alert("محصول به سبد خرید اضافه شد!");
+    displaySimilarProducts(); // بروزرسانی موجودی محصولات مشابه
+  } else {
+    alert("موجودی کافی نیست!");
+  }
+});
+
+// --- نظرات ---
+let comments = ["عالی بود 😍","راضی بودم 👍","کیفیت خوبی داره"];
+function displayComments(){
+  const list = document.getElementById("commentList");
+  list.innerHTML = "";
+  comments.forEach(c=>{
+    const li = document.createElement("li");
+    li.textContent = c;
+    list.appendChild(li);
+  });
+}
+displayComments();
+document.getElementById("addCommentBtn").addEventListener("click",()=>{
+  const val = document.getElementById("newComment").value.trim();
+  if(val){comments.push(val);document.getElementById("newComment").value="";displayComments();}
+});
+
+// --- محصولات مشابه ---
+function displaySimilarProducts(){
+  const similarContainer = document.getElementById("similarProducts");
+  similarContainer.innerHTML = "";
+  products.filter(p=>p.category===product.category && p.id!==product.id).forEach(p=>{
+    const card = document.createElement("div");
+    card.className="similar-card";
+    card.innerHTML=`
+      <img src="${p.image}" alt="${p.name}">
+      <div>${p.name}</div>
+      <div class="price">${p.price.toLocaleString()} تومان</div>
+      <div class="stock">موجودی: ${p.stock}</div>
+      <button ${p.stock===0?'disabled':''} onclick="addSimilarToCart('${p.id}')">افزودن به سبد</button>
+    `;
+    similarContainer.appendChild(card);
+  });
+}
+displaySimilarProducts();
+
+// --- افزودن محصول مشابه به سبد ---
+function addSimilarToCart(id){
+  const p = products.find(pr=>pr.id===id);
+  if(p && p.stock>0){
+    cart.push({...p});
+    p.stock--;
+    localStorage.setItem("cart",JSON.stringify(cart));
+    localStorage.setItem("products",JSON.stringify(products));
+    displaySimilarProducts();
+    alert("محصول به سبد خرید اضافه شد!");
+  } else {
+    alert("موجودی کافی نیست!");
+  }
+}
+</script>
+</body>
+</html>

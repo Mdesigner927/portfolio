@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سبد خرید 🌸</title>
+<style>
+:root{
+  --accent:#ff5b93;
+  --muted:#f7eef6;
+  --card:#fff;
+  --radius:12px;
+  --pad:12px;
+  --bg:#fff8fb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma, sans-serif;
+  background:var(--bg);
+  color:#222;
+  padding:12px;
+}
+h1{color:var(--accent);font-size:1.4rem;margin-bottom:12px}
+.card{
+  background:var(--card);
+  padding:12px;
+  border-radius:var(--radius);
+  margin-bottom:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.card img{width:80px;height:80px;object-fit:cover;border-radius:8px;}
+.card-details{flex:1}
+.card-details .price{font-weight:bold;color:var(--accent);}
+.card button{padding:6px 10px;border:none;border-radius:8px;background:#e24b4b;color:#fff;cursor:pointer;transition:0.2s;}
+.card button:hover{background:#ff357f;}
+.qty-controls{display:flex;align-items:center;gap:6px;margin-top:6px;}
+.qty-controls button{padding:2px 6px;font-size:0.9rem;}
+.total{font-weight:bold;margin:12px 0;font-size:1.1rem;}
+form input, form textarea{width:100%;margin-bottom:6px;padding:8px;border-radius:8px;border:1px solid #ddd;font-family:Tahoma;}
+form button{padding:8px 12px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;transition:0.2s;}
+form button:hover{background:#ff357f;}
+.empty{text-align:center;color:#999;font-style:italic;margin-top:20px;}
+</style>
+</head>
+<body>
+
+<h1>🛒 سبد خرید</h1>
+<div id="cartContainer"></div>
+<div class="total">جمع کل: <span id="cartTotal">۰</span> تومان</div>
+
+<form id="orderForm">
+  <input type="text" id="custName" placeholder="نام و نام خانوادگی" required>
+  <input type="text" id="custPhone" placeholder="شماره تماس" required>
+  <textarea id="custAddress" placeholder="آدرس" rows="2" required></textarea>
+  <button type="submit">ثبت سفارش</button>
+</form>
+
+<script>
+// --- محصولات فروشگاه از localStorage ---
+let products = JSON.parse(localStorage.getItem("products") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+const cartContainer = document.getElementById("cartContainer");
+const cartTotal = document.getElementById("cartTotal");
+
+function displayCart(){
+  cartContainer.innerHTML="";
+  if(cart.length===0){ 
+    cartContainer.innerHTML='<div class="empty">سبد خرید خالی است</div>'; 
+    cartTotal.textContent='۰'; 
+    return;
+  }
+  let total=0;
+
+  const summary={};
+  cart.forEach(item=>{
+    if(summary[item.id]) summary[item.id].qty++;
+    else summary[item.id]={...item,qty:1};
+    total+=item.price;
+  });
+
+  Object.values(summary).forEach(item=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
+      <img src="${item.image}" alt="${item.name}">
+      <div class="card-details">
+        <div>${item.name} ${item.qty>1?`× ${item.qty}`:""}</div>
+        <div class="price">${(item.price*item.qty).toLocaleString()} تومان</div>
+        <div class="qty-controls">
+          <button ${item.qty>=getProductStock(item.id)?'disabled':''} onclick="increaseQty('${item.id}')">+</button>
+          <button onclick="decreaseQty('${item.id}')">-</button>
+        </div>
+      </div>
+      <button onclick="removeFromCart('${item.id}')">❌ حذف</button>
+    `;
+    cartContainer.appendChild(div);
+  });
+
+  cartTotal.textContent=total.toLocaleString();
+}
+
+function getProductStock(id){
+  const p=products.find(pr=>pr.id===id);
+  return p? p.stock : 0;
+}
+
+function increaseQty(id){
+  const product=products.find(p=>p.id===id);
+  if(!product || product.stock<=0) return;
+  cart.push({...product});
+  product.stock--;
+  updateCartStorage();
+}
+
+function decreaseQty(id){
+  const index=cart.findIndex(c=>c.id===id);
+  if(index>=0){
+    const product=products.find(p=>p.id===id);
+    if(product) product.stock++;
+    cart.splice(index,1);
+    updateCartStorage();
+  }
+}
+
+function removeFromCart(id){
+  const indexes=cart.map((c,i)=>c.id===id?i:-1).filter(i=>i>=0);
+  indexes.reverse().forEach(i=>{
+    const product=products.find(p=>p.id===cart[i].id);
+    if(product) product.stock++;
+    cart.splice(i,1);
+  });
+  updateCartStorage();
+}
+
+function updateCartStorage(){
+  localStorage.setItem("cart",JSON.stringify(cart));
+  localStorage.setItem("products",JSON.stringify(products));
+  displayCart();
+}
+
+displayCart();
+
+// --- ثبت سفارش ---
+document.getElementById("orderForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(cart.length===0){ 
+    alert("سبد خرید خالی است!"); 
+    return;
+  }
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
+  orders.push({
+    name:document.getElementById("custName").value,
+    phone:document.getElementById("custPhone").value,
+    address:document.getElementById("custAddress").value,
+    products:[...cart],
+    date:new Date().toLocaleString()
+  });
+  localStorage.setItem("orders",JSON.stringify(orders));
+
+  cart=[];
+  localStorage.setItem("cart","[]");
+  alert("سفارش ثبت شد!");
+  displayCart();
+  document.getElementById("orderForm").reset();
+});
+</script>
+</body>
+</html>
