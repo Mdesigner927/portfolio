@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بازی حدس عدد سبک 🌌</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazir&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Vazir',sans-serif;
+  background: radial-gradient(ellipse at bottom,#0f2027 0%,#203a43 100%);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+  color:#fff;
+}
+.star{position:absolute;width:2px;height:2px;background:white;border-radius:50%;opacity:0.8;animation:twinkle 1.5s infinite;}
+@keyframes twinkle{0%,100%{opacity:0.4;}50%{opacity:1;}}
+.game-container{
+  background: rgba(0,0,0,0.75);
+  padding:30px 20px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(255,255,255,0.2);
+  width:90%;
+  max-width:450px;
+}
+h1{margin-bottom:10px;}
+p{margin-bottom:15px;}
+.input-group{display:flex;justify-content:center;gap:8px;margin-bottom:15px;}
+input{padding:12px;width:60%;border-radius:10px;border:2px solid #ff6f61;font-size:1rem;background:rgba(255,255,255,0.1);color:#fff;transition:all 0.2s ease;}
+input:focus{outline:none;box-shadow:0 0 10px #ff6f61;transform:scale(1.05);}
+button{padding:12px 18px;border:none;background-color:#ff6f61;color:white;border-radius:10px;cursor:pointer;font-size:1rem;transition:all 0.2s ease;box-shadow:0 0 8px #ff6f61,0 0 15px #ff6f61;}
+button:hover{background-color:#ff3b2f;transform:scale(1.05);box-shadow:0 0 15px #ff3b2f,0 0 20px #ff6f61;}
+#message{font-size:1.4rem;margin:15px 0;min-height:45px;font-weight:bold;background:rgba(255,255,255,0.1);padding:10px 12px;border-radius:12px;box-shadow:0 0 10px #ff6f61;transition:all 0.3s ease;text-shadow:0 0 5px #fff,0 0 8px #ff6f61;}
+.cards{display:flex;justify-content:space-between;align-items:center;margin:15px 0;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;}
+.card{background:linear-gradient(135deg,#ff6f61,#ffecd2);color:#000;padding:12px 15px;border-radius:12px;flex:1 1 0;min-width:80px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;}
+.card:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 8px 20px rgba(255,111,97,0.5);}
+#resetBtn{margin-top:20px;border-radius:12px;padding:12px 25px;background:linear-gradient(135deg,#ff3b2f,#ff6f61);box-shadow:0 0 10px #ff6f61,0 0 15px #ff3b2f;}
+.scoreboard-container{margin-top:15px;background:rgba(0,0,0,0.6);padding:10px;border-radius:12px;box-shadow:0 3px 12px rgba(255,255,255,0.2);}
+.scoreboard-container h2{margin-bottom:8px;color:#ff6f61;text-shadow:0 0 3px #fff,0 0 5px #ff6f61;font-size:1.1rem;}
+#scoreboard{width:100%;border-collapse:collapse;}
+#scoreboard th,#scoreboard td{padding:6px;border-bottom:1px solid rgba(255,255,255,0.2);text-align:center;color:#fff;font-size:0.9rem;}
+#scoreboard th{color:#ffecd2;text-shadow:0 0 3px #ff6f61;}
+@media(max-width:500px){input{width:55%;font-size:0.95rem;}button{padding:10px 15px;font-size:0.95rem;}.cards{flex-direction:row;gap:6px;}}
+</style>
+</head>
+<body>
+<div class="game-container">
+<h1>بازی حدس عدد سبک 🌌</h1>
+<p>یک عدد بین <strong>1</strong> تا <strong>100</strong> حدس بزن!</p>
+<div class="input-group">
+<input type="number" id="guessInput" placeholder="عددت را وارد کن">
+<button id="guessBtn">حدس بزن</button>
+</div>
+<div class="cards">
+<div class="card"><p>تعداد حدس‌ها</p><span id="attempts">0</span></div>
+<div class="card"><p>امتیاز</p><span id="score">100</span></div>
+<div class="card"><p>زمان باقی‌مانده</p><span id="timer">60</span> ثانیه</div>
+</div>
+<p id="message">🎮 بازی را شروع کن!</p>
+<button id="resetBtn">شروع دوباره 🔄</button>
+<div class="scoreboard-container">
+<h2>🏆 جدول رکوردها</h2>
+<table id="scoreboard">
+<thead><tr><th>رتبه</th><th>امتیاز</th><th>تاریخ</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+// ستاره‌ها سبک‌تر
+const starCount=30;
+for(let i=0;i<starCount;i++){
+  const star=document.createElement('div');
+  star.classList.add('star');
+  star.style.top=Math.random()*100+'%';
+  star.style.left=Math.random()*100+'%';
+  star.style.width=star.style.height=Math.random()*2+1+'px';
+  star.style.animationDuration=(Math.random()*1.5+1)+'s';
+  document.body.appendChild(star);
+}
+
+let secretNumber=Math.floor(Math.random()*100)+1;
+let attempts=0;
+let score=100;
+let timeLeft=60;
+let timerInterval;
+
+const guessInput=document.getElementById('guessInput');
+const guessBtn=document.getElementById('guessBtn');
+const message=document.getElementById('message');
+const attemptsSpan=document.getElementById('attempts');
+const scoreSpan=document.getElementById('score');
+const timerSpan=document.getElementById('timer');
+const resetBtn=document.getElementById('resetBtn');
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerSpan.textContent=timeLeft;
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    timerSpan.textContent=timeLeft;
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      showMessage("⏰ وقت تمام شد! بازی را دوباره شروع کن","red");
+      guessBtn.disabled=true;
+    }
+  },1000);
+}
+
+startTimer();
+
+guessBtn.addEventListener('click',()=>{
+  const guess=Number(guessInput.value);
+  attempts++;
+  attemptsSpan.textContent=attempts;
+  if(!guess||guess<1||guess>100){showMessage("لطفاً یک عدد بین 1 تا 100 وارد کن!","red");guessInput.value='';return;}
+  if(guess===secretNumber){
+    showMessage(`🌟 آفرین! عدد ${secretNumber} بود!`,"#0f0");
+    score+=50;scoreSpan.textContent=score;
+    playWinAnimation();playConfetti();playSound('win');clearInterval(timerInterval);guessBtn.disabled=true;guessInput.value='';
+    saveScore(score);
+  }else{
+    if(guess<secretNumber) showMessage("عدد بزرگ‌تر است 🔼","orange"); else showMessage("عدد کوچک‌تر است 🔽","orange");
+    score-=5;scoreSpan.textContent=score>0?score:0;shakeInput();playSound('wrong');guessInput.value='';
+  }
+});
+
+resetBtn.addEventListener('click',()=>{
+  secretNumber=Math.floor(Math.random()*100)+1;
+  attempts=0;score=100;timeLeft=60;
+  attemptsSpan.textContent=attempts;scoreSpan.textContent=score;timerSpan.textContent=timeLeft;
+  message.textContent="🎮 بازی را شروع کن!";message.style.color="#fff";guessInput.value='';guessBtn.disabled=false;
+  startTimer();
+});
+
+function showMessage(text,color){message.textContent=text;message.style.color=color;message.style.textShadow="0 0 5px #fff,0 0 8px #ff6f61";message.style.transform="scale(1.1)";setTimeout(()=>{message.style.transform="scale(1)";},200);}
+function shakeInput(){guessInput.style.transform="translateX(-5px)";setTimeout(()=>{guessInput.style.transform="translateX(5px)";},50);setTimeout(()=>{guessInput.style.transform="translateX(0)";},100);}
+function playWinAnimation(){document.body.style.background="radial-gradient(ellipse at bottom,#1c0f2c 0%,#302b63 100%)";setTimeout(()=>{document.body.style.background="radial-gradient(ellipse at bottom,#0f2027 0%,#203a43 100%)";},1200);}
+function playConfetti(){confetti({particleCount:100,spread:100,origin:{y:0.6},colors:['#ff6f61','#ffecd2','#ff3b2f','#0ff','#f0f']});}
+function playSound(type){let audio;if(type==='win') audio=new Audio('https://freesound.org/data/previews/320/320181_5260877-lq.mp3');else if(type==='wrong') audio=new Audio('https://freesound.org/data/previews/170/170300_2437358-lq.mp3');if(audio) audio.play();}
+
+// رکوردها
+function saveScore(score){let scores=JSON.parse(localStorage.getItem('scores'))||[];const date=new Date().toLocaleDateString()+' '+new Date().toLocaleTimeString();scores.push({score,date});scores.sort((a,b)=>b.score-a.score);scores=scores.slice(0,5);localStorage.setItem('scores',JSON.stringify(scores));displayScores();}
+function displayScores(){const scores=JSON.parse(localStorage.getItem('scores'))||[];const tbody=document.querySelector('#scoreboard tbody');tbody.innerHTML='';scores.forEach((s,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td>${s.score}</td><td>${s.date}</td>`;tbody.appendChild(tr);});}
+displayScores();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پرتفولیو M_Designer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { margin: 0; font-family: 'Vazir', sans-serif; background: #f5f7fa; color: #333; scroll-behavior: smooth; direction: rtl; text-align: right; }
+  header { background: #4f46e5; color: white; padding: 1rem 0; text-align: center; font-size: 1.8rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+  nav { display: flex; justify-content: center; gap: 2rem; margin-top: 0.5rem; }
+  nav a { color: white; text-decoration: none; font-weight: bold; transition: color 0.3s ease; }
+  nav a:hover { color: #fcb69f; }
+  section { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; opacity: 0; transform: translateY(50px); transition: all 1s ease; }
+  section.visible { opacity: 1; transform: translateY(0); }
+  h2 { text-align: center; margin-bottom: 1.5rem; color: #1e3a8a; }
+  .gallery { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; display: block; color: inherit; text-decoration: none; }
+  .card:hover { transform: rotateY(5deg) scale(1.05); box-shadow: 0 12px 20px rgba(0,0,0,0.3); }
+  .card img { width: 100%; height: auto; max-height: 250px; object-fit: contain; transition: transform 0.3s ease; }
+  .card:hover img { transform: scale(1.05); }
+  .card-content { padding: 1rem; }
+  .card-content h3 { margin: 0.5rem 0; color: #4f46e5; }
+  .card-content p { font-size: 0.9rem; color: #555; }
+  .contact-container { background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); max-width: 500px; margin: 2rem auto; opacity: 1; transform: translateY(0); transition: all 1s ease; }
+  .form-group { margin-bottom: 15px; }
+  label { display: block; margin-bottom: 5px; color: #555; }
+  input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 10px; outline: none; font-size: 14px; transition: all 0.3s ease; }
+  input:focus, textarea:focus { border-color: #f67280; box-shadow: 0 0 8px rgba(246,114,128,0.3); }
+  textarea { resize: none; height: 100px; }
+  .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(90deg, #f67280, #fcb69f); color: white; font-size: 16px; cursor: pointer; transition: transform 0.3s ease, background 0.5s ease; }
+  .btn:hover { background: linear-gradient(90deg, #f94d6a, #fcb69f); transform: scale(1.05) translateY(-2px); }
+  .error { color: red; font-size: 13px; margin-top: 5px; display: none; }
+  .messages { margin-top: 20px; background: #e0f7fa; border-radius: 10px; padding: 10px; max-height: 200px; overflow-y: auto; font-size: 14px; }
+  .social-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+  .social-links a { color: #4f46e5; font-size: 1.8rem; transition: transform 0.3s ease, color 0.3s ease; }
+  .social-links a:hover { color: #f67280; transform: scale(1.3) rotate(10deg); }
+  footer { text-align: center; padding: 1rem; background: #e0e7ff; margin-top: 2rem; }
+  footer a { text-decoration: none; color: #4f46e5; font-weight: bold; transition: color 0.3s ease; }
+  footer a:hover { color: #f67280; }
+  .intro-img { display: block; max-width: 180px; margin: 0 auto 1rem; border-radius: 50%; }
+</style>
+</head>
+<body>
+<header>
+  پرتفولیو M_Designer
+  <nav>
+    <a href="#about">معرفی</a>
+    <a href="#projects">نمونه‌کارها</a>
+    <a href="#contact">تماس</a>
+  </nav>
+</header>
+
+<section id="about">
+  <h2>معرفی شخصی</h2>
+  <img src="img/Mfoto.png" alt="M_Designer" class="intro-img">
+  <p style="text-align:center; max-width:700px; margin:auto;">سلام! من M_Designer هستم، طراح و توسعه‌دهنده وب با علاقه به طراحی مدرن، ریسپانسیو و تجربه کاربری عالی.</p>
+  <div class="social-links">
+    <a href="https://instagram.com/mdesigner927" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://t.me/mdesigner927" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+    <a href="mailto:mdesigner927@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>نمونه‌کارها</h2>
+  <div class="gallery">
+    <a href="project1.html" class="card">
+      <img src="img/projec1.png" alt="پروژه 1">
+      <div class="card-content"><h3>پروژه ۱</h3><p>صفحه معرفی شخصی با طراحی مدرن و ریسپانسیو.</p></div>
+    </a>
+    <a href="project2.html" class="card">
+      <img src="img/projec2.png" alt="پروژه 2">
+      <div class="card-content"><h3>پروژه ۲</h3><p>گالری نمونه طراحی انواع فرم‌ها با اعتبار سنجی و جدول</p></div>
+    </a>
+    <a href="project3.html" class="card">
+      <img src="img/projec3.jpg" alt="پروژه 3">
+      <div class="card-content"><h3>پروژه ۳</h3><p>طراحی گرافیکی و انیمیشن و بازی</p></div>
+    </a>
+    <!-- پروژه ۴ اکنون به فروشگاه shop/index.html وصل است -->
+    <a href="shop/index.html" class="card">
+      <img src="img/F.jpg" alt="پروژه 4">
+      <div class="card-content"><h3>پروژه ۴</h3><p>طراحی فروشگاه با پنل مدیریت</p></div>
+    </a>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>تماس با من</h2>
+  <div class="contact-container">
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="name">نام کامل</label>
+        <input type="text" id="name" name="name" placeholder="نام خود را وارد کنید">
+        <div class="error" id="nameError">نام نمی‌تواند خالی باشد</div>
+      </div>
+      <div class="form-group">
+        <label for="email">ایمیل</label>
+        <input type="email" id="email" name="email" placeholder="example@email.com">
+        <div class="error" id="emailError">ایمیل معتبر نیست</div>
+      </div>
+      <div class="form-group">
+        <label for="subject">موضوع پیام</label>
+        <input type="text" id="subject" name="subject" placeholder="موضوع پیام را وارد کنید">
+      </div>
+      <div class="form-group">
+        <label for="message">متن پیام</label>
+        <textarea id="message" name="message" placeholder="پیام خود را بنویسید"></textarea>
+        <div class="error" id="messageError">پیام باید حداقل 10 کاراکتر باشد</div>
+      </div>
+      <button type="submit" class="btn">ارسال</button>
+    </form>
+    <div class="messages" id="messages">
+      <strong>پیام‌های ارسال‌شده:</strong>
+      <ul id="messageList"></ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2025 M_Designer | <a href="#">بازگشت به بالا</a></p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const sections = document.querySelectorAll('section');
+  const revealSection = () => {
+    const triggerBottom = window.innerHeight / 5 * 4;
+    sections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+      if(sectionTop < triggerBottom){ section.classList.add('visible'); }
+    });
+  };
+  window.addEventListener('scroll', revealSection);
+  revealSection();
+
+  // Contact form
+  const form = document.getElementById('contactForm');
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const messageInput = document.getElementById('message');
+  const messageList = document.getElementById('messageList');
+  form.addEventListener('submit', function(event){
+    event.preventDefault();
+    let valid = true;
+
+    if(nameInput.value.trim() === "") { document.getElementById('nameError').style.display='block'; valid=false; } else { document.getElementById('nameError').style.display='none'; }
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if(!emailInput.value.match(emailPattern)) { document.getElementById('emailError').style.display='block'; valid=false; } else { document.getElementById('emailError').style.display='none'; }
+    if(messageInput.value.trim().length < 10) { document.getElementById('messageError').style.display='block'; valid=false; } else { document.getElementById('messageError').style.display='none'; }
+
+    if(valid){
+      const li = document.createElement('li');
+      li.textContent = `${nameInput.value} (${emailInput.value}) : ${messageInput.value}`;
+      messageList.appendChild(li);
+      form.reset();
+    }
+  });
+</script>
+</body>
+</html>

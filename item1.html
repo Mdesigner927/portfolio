@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فروشگاه مهتا 🌸</title>
+<style>
+:root{
+  --accent:#ff5b93;
+  --muted:#f7eef6;
+  --card:#fff;
+  --radius:12px;
+  --pad:12px;
+  --bg:#fff8fb;
+  --admin-bg:#ffe6f0;
+  --admin-text:#222;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma, sans-serif;
+  background:var(--bg);
+  color:#222;
+  padding:12px;
+}
+header{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{margin:0;color:var(--accent);font-size:1.2rem}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type="text"], select, input[type="number"], textarea{
+  padding:8px;border-radius:8px;border:1px solid #ddd;
+  font-family:Tahoma;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus, select:focus, input[type="number"]:focus, textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 6px rgba(255,91,147,0.3);
+}
+main{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.card{
+  background:var(--card);
+  padding:16px;
+  border-radius:var(--radius);
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  text-align:center;
+  transition:transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+}
+.card img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:8px;
+  transition:transform 0.3s ease;
+}
+.card:hover img{ transform: scale(1.03);}
+.price{font-weight:bold;color:var(--accent);margin-top:6px}
+.stock{font-size:12px;color:#666}
+.card button{
+  padding:6px 10px;
+  font-size:0.9rem;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background 0.25s, transform 0.2s, box-shadow 0.2s;
+}
+.card button:hover:not([disabled]){
+  background:#ff357f;
+  transform:scale(1.05);
+  box-shadow:0 4px 12px rgba(255,91,147,0.3);
+}
+.card button[disabled]{opacity:0.5;cursor:not-allowed}
+.card .details-btn{
+  padding:6px 10px;
+  font-size:0.9rem;
+  margin-top:4px;
+}
+.bottom{
+  display:none;
+  position:fixed;
+  bottom:12px;
+  right:50%;
+  transform:translateX(50%);
+  background:rgba(255,255,255,0.95);
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  z-index:999;
+  max-width:360px;
+  width:90%;
+}
+.cart-list{list-style:none;padding:0;margin:0;max-height:160px;overflow:auto}
+.cart-list li{
+  padding:6px 0;
+  border-bottom:1px dashed #eee;
+  font-size:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.tabs{display:flex;gap:8px;margin-top:8px}
+.tab-btn{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #f0c;
+  background:#fff;
+  cursor:pointer;
+  transition:box-shadow 0.25s, transform 0.2s;
+}
+.tab-btn:hover{ transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.12);}
+.active{box-shadow:0 4px 16px rgba(0,0,0,0.18);border-color:var(--accent);}
+#adminView{
+  display:none;
+  margin-top:12px;
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+  transition:opacity 0.25s;
+}
+table{width:100%;border-collapse:collapse;margin-top:12px;transition:all 0.2s}
+th,td{border:1px solid #eee;padding:10px;text-align:center;font-size:13px}
+th{background:var(--admin-bg)}
+.muted{color:#666;font-size:12px}
+.empty-row td{text-align:center;color:#999;font-style:italic;background:#fff0f5}
+@media(min-width:900px){
+  body{padding:24px}
+  .card img{height:160px}
+}
+.show-cart-btn{
+  position:fixed;
+  bottom:12px;
+  right:50%;
+  transform:translateX(50%);
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+.show-cart-btn:hover{background:#ff357f;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>فروشگاه مهتا 🌸</h1>
+<div class="tabs">
+<button id="storeTab" class="tab-btn active">فروشگاه</button>
+<button id="adminTab" class="tab-btn">پنل مدیریت</button>
+</div>
+</header>
+
+<main id="storeView">
+<div class="controls">
+<input type="text" id="searchInput" placeholder="جست‌وجو براساس نام...">
+<select id="categorySelect">
+<option value="all">همه دسته‌ها</option>
+</select>
+<select id="sortSelect">
+<option value="default">مرتب‌سازی</option>
+<option value="price-asc">قیمت ↑</option>
+<option value="price-desc">قیمت ↓</option>
+</select>
+</div>
+
+<section id="productList" class="grid" aria-live="polite"></section>
+
+<div class="bottom" id="cartBottom">
+<strong>🛒 سبد خرید</strong>
+<div class="muted">جمع: <span id="cartTotal">۰</span> تومان</div>
+<ul id="cartList" class="cart-list"></ul>
+<form id="orderForm" style="margin-top:8px">
+<input type="text" id="custName" placeholder="نام و نام خانوادگی" required style="width:100%;margin-bottom:6px">
+<input type="text" id="custPhone" placeholder="شماره تماس" required style="width:100%;margin-bottom:6px">
+<textarea id="custAddress" placeholder="آدرس" rows="2" style="width:100%;margin-bottom:6px"></textarea>
+<div style="display:flex;gap:8px">
+<button type="submit" style="flex:1">ثبت سفارش</button>
+<button type="button" id="clearCartBtn" style="flex:1;background:#777">پاک کردن سبد</button>
+</div>
+</form>
+</div>
+
+<button class="show-cart-btn" id="showCartBtn">🛒 نمایش سبد خرید</button>
+</main>
+
+<section id="adminView">
+<h2>📋 پنل مدیریت سفارش‌ها</h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input type="text" id="searchOrder" placeholder="جست‌وجو براساس نام مشتری...">
+<button id="refreshBtn">🔄 تازه‌سازی</button>
+<button id="clearAllOrdersBtn" style="background:#e24b4b">حذف همه سفارش‌ها</button>
+</div>
+<table id="ordersTable">
+<thead>
+<tr>
+<th>نام مشتری</th>
+<th>تلفن</th>
+<th>آدرس</th>
+<th>محصولات</th>
+<th>تاریخ</th>
+<th>عملیات</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</section>
+
+<script>
+// داده محصولات
+// products.js
+const products = [  
+  {id:"p1", name:"دفتر گل‌گلی", price:120000, image:"bflow1.jpg", category:"لوازم‌تحریر", stock:5},  
+  {id:"p2", name:"ماگ عشق", price:85000, image:"mag1.jpg", category:"ماگ", stock:3},  
+  {id:"p3", name:"شمع معطر", price:55000, image:"candle1.jpg", category:"دکوری", stock:10},  
+  {id:"p4", name:"کارت پستال قلبی", price:25000, image:"cart1.jpg", category:"لوازم‌تحریر", stock:7},  
+  {id:"p5", name:"کیف دستی کوچک", price:180000, image:"bag1.jpg", category:"اکسسوری", stock:4},  
+  {id:"p6", name:"گلدان سرامیکی", price:95000, image:"flowerpot1.jpg", category:"دکوری", stock:6},  
+  {id:"p7", name:"دفتر یادداشت کوچک", price:40000, image:"bflow2.jpg", category:"لوازم‌تحریر", stock:12},  
+  {id:"p8", name:"آویز قلبی", price:30000, image:"necklace1.jpg", category:"اکسسوری", stock:15},  
+];
+
+// سبد خرید
+let cart=[];
+
+// نمایش محصولات
+const productList=document.getElementById("productList");
+function displayProducts(){
+  productList.innerHTML="";
+  products.forEach(p=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${p.image}" alt="${p.name}">
+      <div>${p.name}</div>
+      <div class="price">${p.price.toLocaleString()} تومان</div>
+      <div class="stock">موجودی: ${p.stock}</div>
+      <button ${p.stock===0?'disabled':''} onclick="addToCart('${p.id}')">افزودن به سبد</button>
+      <button class="details-btn" onclick="viewDetails('${p.id}')">جزئیات</button>
+    `;
+    productList.appendChild(card);
+  });
+}
+displayProducts();
+
+// مدیریت سبد خرید
+const cartBottom=document.getElementById("cartBottom");
+const cartList=document.getElementById("cartList");
+const cartTotal=document.getElementById("cartTotal");
+const showCartBtn=document.getElementById("showCartBtn");
+
+showCartBtn.addEventListener("click",()=>{
+  cartBottom.style.display=cartBottom.style.display==="block"?"none":"block";
+});
+
+function updateCart(){
+  cartList.innerHTML="";
+  let total=0;
+  cart.forEach((item,index)=>{
+    total+=item.price;
+    const li=document.createElement("li");
+    li.innerHTML=`${item.name} - ${item.price.toLocaleString()} تومان   
+    <button style="background:#e24b4b;padding:2px 6px;" onclick="removeFromCart(${index})">❌</button>`;
+    cartList.appendChild(li);
+  });
+  cartTotal.textContent=total.toLocaleString();
+}
+
+function addToCart(id){
+  const product=products.find(p=>p.id===id);
+  if(product && product.stock>0){
+    cart.push({...product});
+    product.stock--;
+    displayProducts();
+    updateCart();
+  }
+}
+
+function removeFromCart(index){
+  const item=cart[index];
+  const prod=products.find(p=>p.id===item.id);
+  if(prod) prod.stock++;
+  cart.splice(index,1);
+  displayProducts();
+  updateCart();
+}
+
+document.getElementById("clearCartBtn").addEventListener("click",()=>{
+  cart.forEach(item=>{
+    const prod=products.find(p=>p.id===item.id);
+    if(prod) prod.stock++;
+  });
+  cart=[];
+  displayProducts();
+  updateCart();
+});
+
+// ثبت سفارش
+document.getElementById("orderForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(cart.length===0){ alert("سبد خرید خالی است!"); return;}
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
+  orders.push({
+    name:document.getElementById("custName").value,
+    phone:document.getElementById("custPhone").value,
+    address:document.getElementById("custAddress").value,
+    products:[...cart],
+    date:new Date().toLocaleString()
+  });
+  localStorage.setItem("orders",JSON.stringify(orders));
+  alert("سفارش ثبت شد!");
+  cart=[];
+  displayProducts();
+  updateCart();
+  cartBottom.style.display="none";
+  document.getElementById("orderForm").reset();
+});
+
+// پنل مدیریت
+const adminTab=document.getElementById("adminTab");
+const storeTab=document.getElementById("storeTab");
+const adminView=document.getElementById("adminView");
+const storeView=document.getElementById("storeView");
+const ordersTable=document.getElementById("ordersTable").querySelector("tbody");
+
+adminTab.addEventListener("click",()=>{
+  storeView.style.display="none";
+  adminView.style.display="block";
+  adminTab.classList.add("active");
+  storeTab.classList.remove("active");
+  displayOrders();
+});
+storeTab.addEventListener("click",()=>{
+  storeView.style.display="block";
+  adminView.style.display="none";
+  storeTab.classList.add("active");
+  adminTab.classList.remove("active");
+});
+
+// نمایش سفارش‌ها
+function displayOrders(){
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
+  ordersTable.innerHTML="";
+  if(orders.length===0){
+    ordersTable.innerHTML=`<tr class="empty-row"><td colspan="6">سفارشی موجود نیست</td></tr>`;
+    return}
+  orders.forEach((o,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${o.name}</td>
+      <td>${o.phone}</td>
+      <td>${o.address}</td>
+      <td>${o.products.map(p=>p.name).join(", ")}</td>
+      <td>${o.date}</td>
+      <td><button style="background:#e24b4b;padding:4px 6px;" onclick="deleteOrder(${i})">❌</button></td>
+    `;
+    ordersTable.appendChild(tr);
+  });
+}
+
+function deleteOrder(index){
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
+  orders.splice(index,1);
+  localStorage.setItem("orders",JSON.stringify(orders));
+  displayOrders();
+}
+
+document.getElementById("clearAllOrdersBtn").addEventListener("click",()=>{
+  if(confirm("آیا مطمئن هستید همه سفارش‌ها حذف شوند؟")){
+    localStorage.setItem("orders","[]");
+    displayOrders();
+  }
+});
+
+document.getElementById("refreshBtn").addEventListener("click",displayOrders);
+
+displayOrders();
+
+// نمایش صفحه جزئیات محصول
+function viewDetails(id){
+  window.open(`product.html?id=${id}`,"_blank");
+}
+</script>
+<div id="products-container"></div>
+
+<script src="products.js"></script>
+
+</body>
+</html>
