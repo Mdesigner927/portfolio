@@ -88,21 +88,20 @@ table th { background: var(--muted); }
 </thead>
 <tbody></tbody>
 </table>
-</section>
-</main>
+</section></main>
 
 <script>
 // --- داده‌های پیش‌فرض ---
 if(!localStorage.getItem("products")){
 localStorage.setItem("products",JSON.stringify([
-{id:"1",name:"دفتر گل‌گلی",price:120000,image:"bflow1.jpg",category:"لوازم‌تحریر",stock:5},
-{id:"2",name:"ماگ عشق",price:85000,image:"mag1.jpg",category:"ماگ",stock:3},
-{id:"3",name:"شمع معطر",price:55000,image:"condle1.jpg",category:"دکوری",stock:10},
-{id:"4",name:"کارت پستال قلبی",price:25000,image:"cart1.jpg",category:"لوازم‌تحریر",stock:7},
-{id:"5",name:"کیف دستی کوچک",price:180000,image:"bag1.jpg",category:"اکسسوری",stock:4},
-{id:"6",name:"گلدان سرامیکی",price:95000,image:"pot1.jpg",category:"دکوری",stock:6},
-{id:"7",name:"دفتر یادداشت کوچک",price:40000,image:"note1.jpeg",category:"لوازم‌تحریر",stock:12},
-{id:"8",name:"آویز قلبی",price:30000,image:"oiz1.jpg",category:"اکسسوری",stock:15}
+{id:"1",name:"دفتر گل‌گلی",price:120000,image:"img/bflow1.jpg",category:"لوازم‌تحریر",stock:5},
+{id:"2",name:"ماگ عشق",price:85000,image:"img/mag1.jpg",category:"ماگ",stock:3},
+{id:"3",name:"شمع معطر",price:55000,image:"img/condle1.jpg",category:"دکوری",stock:10},
+{id:"4",name:"کارت پستال قلبی",price:25000,image:"img/cart1.jpg",category:"لوازم‌تحریر",stock:7},
+{id:"5",name:"کیف دستی کوچک",price:180000,image:"img/bag1.jpg",category:"اکسسوری",stock:4},
+{id:"6",name:"گلدان سرامیکی",price:95000,image:"img/pot1.jpg",category:"دکوری",stock:6},
+{id:"7",name:"دفتر یادداشت کوچک",price:40000,image:"img/note1.jpeg",category:"لوازم‌تحریر",stock:12},
+{id:"8",name:"آویز قلبی",price:30000,image:"img/oiz1.jpg",category:"اکسسوری",stock:15}
 ]));
 }
 
@@ -175,7 +174,6 @@ storeTab.classList.add("active");
 adminTab.classList.remove("active");
 });
 
-// --- نمایش سفارش‌ها ---
 function displayOrders(){
 let orders=JSON.parse(localStorage.getItem("orders")||"[]");
 ordersTable.innerHTML="";
@@ -229,7 +227,7 @@ updateCart();
 }
 }
 
-// --- جستجو و فیلتر ---
+// --- فیلتر و جستجوی محصولات ---
 document.getElementById("searchInput").addEventListener("input",(e)=>{
 const val=e.target.value.toLowerCase();
 products.forEach(p=>{
@@ -252,7 +250,7 @@ if(card) card.style.display = (val==="all" || p.category===val) ? "block":"none"
 });
 });
 
-// --- شروع ---
+// --- نمایش اولیه ---
 displayProducts();
 updateCart();
 displayOrders();
