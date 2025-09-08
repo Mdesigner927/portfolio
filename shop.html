@@ -3,481 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>فروشگاه M_Designer 🌸</title>
+<title>لیست کارهای حرفه‌ای 🌟</title>
 <style>
 :root {
   --accent: #ff5b93;
-  --muted: #f7eef6;
-  --card: #fff;
-  --radius: 12px;
   --bg: #fff8fb;
+  --card: #fff;
+  --text: #222;
+  --shadow: rgba(0,0,0,0.12);
 }
-* { box-sizing: border-box; }
-body { margin: 0; font-family: Tahoma, sans-serif; background: var(--bg); color: #222; padding: 12px; }
-header { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-h1 { margin: 0; color: var(--accent); font-size: 1.2rem; }
-.tabs { display: flex; gap: 8px; }
-.tab-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #f0c; background: #fff; cursor: pointer; transition: 0.2s; }
-.tab-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-.active { box-shadow: 0 4px 16px rgba(0,0,0,0.18); border-color: var(--accent); }
-.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
-input, select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-family: Tahoma; transition: 0.2s; }
-input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 6px rgba(255,91,147,0.3); }
-main { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-.card { background: var(--card); padding: 16px; border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,0.12); text-align: center; transition: 0.25s; }
-.card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
-.card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; transition: 0.3s; }
-.card:hover img { transform: scale(1.03); }
-.price { font-weight: bold; color: var(--accent); margin-top: 6px; }
-.stock { font-size: 12px; color: #666; }
-button, .btn { padding: 6px 10px; font-size: 0.9rem; border: none; border-radius: 8px; cursor: pointer; transition: 0.25s; color: #fff; background: var(--accent); text-decoration: none; }
-button:hover, .btn:hover { background: #ff357f; transform: scale(1.05); }
-button[disabled] { opacity: 0.5; cursor: not-allowed; }
-.show-cart-btn { padding: 10px 16px; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; transition: 0.2s; text-decoration: none; }
-.show-cart-btn:hover { background: #ff357f; }
-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-table th, table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
-table th { background: var(--muted); }
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: Tahoma, sans-serif; background: var(--bg); color: var(--text); padding: 16px; }
+h1 { color: var(--accent); margin-bottom: 16px; }
+.container { max-width: 800px; margin: auto; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+input, select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; flex:1; }
+button { padding: 8px 12px; border:none; border-radius:8px; cursor:pointer; background: var(--accent); color:#fff; transition:0.25s; }
+button:hover { background:#ff357f; transform:scale(1.05); }
+.dark-mode { background:#222; color:#fff; }
+.dark-mode input, .dark-mode select { background:#333; color:#fff; border:1px solid #555; }
+.card { background: var(--card); border-radius:12px; padding:16px; box-shadow:0 4px 12px var(--shadow); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; transition:0.3s; }
+.card:hover { transform: translateY(-4px); box-shadow:0 8px 24px var(--shadow); }
+.task-info { flex:1; margin-left:16px; }
+.task-info h3 { margin-bottom:4px; }
+.task-info p { font-size:0.9rem; color:#666; }
+.completed { text-decoration:line-through; color:#999; }
+.category { font-size:0.8rem; padding:2px 6px; border-radius:4px; color:#fff; }
+.high { background:#ff5b5b; }
+.medium { background:#f5a623; }
+.low { background:#4caf50; }
+.dragging { opacity:0.5; }
 </style>
 </head>
 <body>
+<div class="container">
+<h1>لیست کارهای حرفه‌ای 🌟</h1>
 
-<header>
-<h1>فروشگاه M_Designer 🌸</h1>
-<div class="tabs">
-<button id="storeTab" class="tab-btn active">فروشگاه</button>
-<button id="adminTab" class="tab-btn">پنل مدیریت</button>
-<a href="cart.html" class="show-cart-btn">🛒 سبد خرید</a>
-</div>
-</header>
-
-<main>
-<section id="storeView">
 <div class="controls">
-<input type="text" id="searchInput" placeholder="جست‌وجو براساس نام...">
-<select id="categorySelect"><option value="all">همه دسته‌ها</option></select>
-<select id="sortSelect">
-<option value="default">مرتب‌سازی</option>
-<option value="price-asc">قیمت ↑</option>
-<option value="price-desc">قیمت ↓</option>
+<input type="text" id="taskTitle" placeholder="عنوان کار...">
+<select id="taskPriority">
+  <option value="high">💥 فوری</option>
+  <option value="medium">⚡ متوسط</option>
+  <option value="low">🌿 کم</option>
+</select>
+<input type="date" id="taskDue">
+<button id="addTaskBtn">افزودن کار</button>
+<button id="toggleDark">تاریک/روشن</button>
+<select id="filterSelect">
+  <option value="all">همه</option>
+  <option value="high">💥 فوری</option>
+  <option value="medium">⚡ متوسط</option>
+  <option value="low">🌿 کم</option>
 </select>
 </div>
 
-<section id="productList" class="grid" aria-live="polite"></section>
-</section>
-
-<section id="adminView" style="display:none;">
-<div class="controls">
-<input type="text" id="searchOrder" placeholder="جست‌وجو براساس نام مشتری...">
-<button id="refreshBtn">🔄 تازه‌سازی</button>
-<button id="clearAllOrdersBtn">حذف همه سفارش‌ها</button>
+<div id="taskList"></div>
 </div>
-
-<table id="ordersTable">
-<thead>
-<tr>
-<th>نام مشتری</th>
-<th>تلفن</th>
-<th>آدرس</th>
-<th>محصولات</th>
-<th>تاریخ</th>
-<th>عملیات</th>
-<th>موجودی</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</section></main>
 
 <script>
-// --- داده‌های پیش‌فرض ---
-if(!localStorage.getItem("products")){
-localStorage.setItem("products",JSON.stringify([
-{id:"1",name:"دفتر گل‌گلی",price:120000,image:"img/bflow1.jpg",category:"لوازم‌تحریر",stock:5},
-{id:"2",name:"ماگ عشق",price:85000,image:"img/mag1.jpg",category:"ماگ",stock:3},
-{id:"3",name:"شمع معطر",price:55000,image:"img/condle1.jpg",category:"دکوری",stock:10},
-{id:"4",name:"کارت پستال قلبی",price:25000,image:"img/cart1.jpg",category:"لوازم‌تحریر",stock:7},
-{id:"5",name:"کیف دستی کوچک",price:180000,image:"img/bag1.jpg",category:"اکسسوری",stock:4},
-{id:"6",name:"گلدان سرامیکی",price:95000,image:"img/pot1.jpg",category:"دکوری",stock:6},
-{id:"7",name:"دفتر یادداشت کوچک",price:40000,image:"img/note1.jpeg",category:"لوازم‌تحریر",stock:12},
-{id:"8",name:"آویز قلبی",price:30000,image:"img/oiz1.jpg",category:"اکسسوری",stock:15}
-]));
+let tasks = JSON.parse(localStorage.getItem('tasks')||'[]');
+
+const taskList = document.getElementById('taskList');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const toggleDark = document.getElementById('toggleDark');
+const filterSelect = document.getElementById('filterSelect');
+
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-let products = JSON.parse(localStorage.getItem("products"));
-let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-
-const productList=document.getElementById("productList");
-function displayProducts(){
-productList.innerHTML="";
-products.forEach(p=>{
-const card=document.createElement("div");
-card.className="card";
-card.innerHTML=`
-<img src="${p.image}" alt="${p.name}">
-<div>${p.name}</div>
-<div class="price">${p.price.toLocaleString()} تومان</div>
-<div class="stock">موجودی: ${p.stock}</div>
-<button ${p.stock===0?'disabled':''} onclick="addToCart('${p.id}')">افزودن به سبد</button>
-<a href="product.html?id=${p.id}" class="btn">جزئیات</a>
-`;
-productList.appendChild(card);
-});
-updateCategoryOptions();
+function renderTasks(filter='all') {
+  taskList.innerHTML='';
+  let filtered = tasks.filter(t=> filter==='all' || t.priority===filter );
+  filtered.sort((a,b)=> new Date(a.due)-new Date(b.due));
+  filtered.forEach((task,index)=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.draggable=true;
+    card.dataset.index=index;
+    const catColor = task.priority==='high'?'high':task.priority==='medium'?'medium':'low';
+    card.innerHTML=`
+      <div class="task-info">
+        <h3 class="${task.completed?'completed':''}">${task.title}</h3>
+        <p>💠 سررسید: ${task.due} | <span class="category ${catColor}">${task.priority}</span></p>
+      </div>
+      <div>
+        <button onclick="toggleComplete(${index})">✔️</button>
+        <button onclick="deleteTask(${index})">🗑️</button>
+      </div>
+    `;
+    card.addEventListener('dragstart',dragStart);
+    card.addEventListener('dragover',dragOver);
+    card.addEventListener('drop',drop);
+    card.addEventListener('dragend',dragEnd);
+    taskList.appendChild(card);
+  });
 }
 
-function addToCart(id){
-const product = products.find(p => p.id === id);
-if(product && product.stock > 0){
-cart.push({...product});
-product.stock--;
-updateCart();
-}
-}
-
-function updateCart(){
-localStorage.setItem("cart",JSON.stringify(cart));
-localStorage.setItem("products",JSON.stringify(products));
-displayProducts();
-displayOrders();
+function addTask() {
+  const title = document.getElementById('taskTitle').value.trim();
+  const priority = document.getElementById('taskPriority').value;
+  const due = document.getElementById('taskDue').value;
+  if(!title||!due) return alert('عنوان و سررسید لازم است!');
+  tasks.push({title,priority,due,completed:false});
+  saveTasks();
+  renderTasks(filterSelect.value);
+  document.getElementById('taskTitle').value='';
+  document.getElementById('taskDue').value='';
 }
 
-function updateCategoryOptions(){
-const select = document.getElementById("categorySelect");
-select.innerHTML='<option value="all">همه دسته‌ها</option>';
-[...new Set(products.map(p=>p.category))].forEach(c=>{
-const o=document.createElement("option");
-o.value=c;
-o.textContent=c;
-select.appendChild(o);
-});
+function deleteTask(index){
+  tasks.splice(index,1);
+  saveTasks();
+  renderTasks(filterSelect.value);
 }
 
-const adminTab=document.getElementById("adminTab");
-const storeTab=document.getElementById("storeTab");
-const adminView=document.getElementById("adminView");
-const storeView=document.getElementById("storeView");
-const ordersTable=document.getElementById("ordersTable").querySelector("tbody");
+function toggleComplete(index){
+  tasks[index].completed = !tasks[index].completed;
+  saveTasks();
+  renderTasks(filterSelect.value);
+}
 
-adminTab.addEventListener("click",()=>{
-storeView.style.display="none";
-adminView.style.display="block";
-adminTab.classList.add("active");
-storeTab.classList.remove("active");
-displayOrders();
-});
-storeTab.addEventListener("click",()=>{
-storeView.style.display="block";
-adminView.style.display="none";
-storeTab.classList.add("active");
-adminTab.classList.remove("active");
+// Dark mode
+toggleDark.addEventListener('click',()=>{
+  document.body.classList.toggle('dark-mode');
 });
 
-function displayOrders(){
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-ordersTable.innerHTML="";
-if(orders.length===0){
-ordersTable.innerHTML=`<tr class="empty-row"><td colspan="7">سفارشی موجود نیست</td></tr>`;
-return;
-}
-orders.forEach((o,i)=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`
-<td>${o.name}</td>
-<td>${o.phone}</td>
-<td>${o.address}</td>
-<td>${o.products.map(p=>p.name).join(", ")}</td>
-<td>${o.date}</td>
-<td><button style="background:#e24b4b;padding:4px 6px;" onclick="deleteOrder(${i})">❌</button></td>
-<td>${updateStockInput(o.products)}</td>
-`;
-ordersTable.appendChild(tr);
-});
-}
-
-function deleteOrder(index){
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-orders.splice(index,1);
-localStorage.setItem("orders",JSON.stringify(orders));
-displayOrders();
-}
-
-document.getElementById("clearAllOrdersBtn").addEventListener("click",()=>{
-if(confirm("آیا مطمئن هستید همه سفارش‌ها حذف شوند؟")){
-localStorage.setItem("orders","[]");
-displayOrders();
-}
+// Filter
+filterSelect.addEventListener('change',()=>{
+  renderTasks(filterSelect.value);
 });
 
-document.getElementById("refreshBtn").addEventListener("click",displayOrders);
+addTaskBtn.addEventListener('click',addTask);
 
-function updateStockInput(orderProducts){
-return orderProducts.map(p=>{
-const prod = products.find(pr => pr.id===p.id);
-return `<input type="number" style="width:60px" value="${prod.stock}" onchange="changeStock('${p.id}',this.value)">`;
-}).join("<br>");
+// Drag & Drop
+let draggedIndex=null;
+function dragStart(e){ draggedIndex = e.currentTarget.dataset.index; e.currentTarget.classList.add('dragging'); }
+function dragOver(e){ e.preventDefault(); }
+function drop(e){
+  const dropIndex = e.currentTarget.dataset.index;
+  [tasks[draggedIndex], tasks[dropIndex]] = [tasks[dropIndex], tasks[draggedIndex]];
+  saveTasks();
+  renderTasks(filterSelect.value);
 }
+function dragEnd(e){ e.currentTarget.classList.remove('dragging'); }
 
-function changeStock(id,value){
-const prod=products.find(p=>p.id===id);
-if(prod){
-prod.stock=parseInt(value);
-updateCart();
-}
-}
-
-// --- فیلتر و جستجوی محصولات ---
-document.getElementById("searchInput").addEventListener("input",(e)=>{
-const val=e.target.value.toLowerCase();
-products.forEach(p=>{
-const card=document.querySelector(`.card img[alt='${p.name}']`)?.parentElement;
-if(card) card.style.display = p.name.toLowerCase().includes(val) ? "block" : "none";
-});
-});
-
-document.getElementById("sortSelect").addEventListener("change",(e)=>{
-if(e.target.value==="price-asc") products.sort((a,b)=>a.price-b.price);
-else if(e.target.value==="price-desc") products.sort((a,b)=>b.price-a.price);
-displayProducts();
-});
-
-document.getElementById("categorySelect").addEventListener("change",(e)=>{
-const val=e.target.value;
-products.forEach(p=>{
-const card=document.querySelector(`.card img[alt='${p.name}']`)?.parentElement;
-if(card) card.style.display = (val==="all" || p.category===val) ? "block":"none";
-});
-});
-
-// --- نمایش اولیه ---
-displayProducts();
-updateCart();
-displayOrders();
+// Initial render
+renderTasks();
 </script>
-
-</body>
-</html>.show-cart-btn { padding: 10px 16px; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; transition: 0.2s; text-decoration: none; }
-.show-cart-btn:hover { background: #ff357f; }
-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-table th, table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
-table th { background: var(--muted); }
-</style>
-</head>
-<body>
-
-<header>
-<h1>فروشگاه M_Designer 🌸</h1>
-<div class="tabs">
-<button id="storeTab" class="tab-btn active">فروشگاه</button>
-<button id="adminTab" class="tab-btn">پنل مدیریت</button>
-<a href="cart.html" class="show-cart-btn">🛒 سبد خرید</a>
-</div>
-</header>
-
-<main>
-<section id="storeView">
-<div class="controls">
-<input type="text" id="searchInput" placeholder="جست‌وجو براساس نام...">
-<select id="categorySelect"><option value="all">همه دسته‌ها</option></select>
-<select id="sortSelect">
-<option value="default">مرتب‌سازی</option>
-<option value="price-asc">قیمت ↑</option>
-<option value="price-desc">قیمت ↓</option>
-</select>
-</div>
-
-<section id="productList" class="grid" aria-live="polite"></section>
-</section>
-
-<section id="adminView" style="display:none;">
-<div class="controls">
-<input type="text" id="searchOrder" placeholder="جست‌وجو براساس نام مشتری...">
-<button id="refreshBtn">🔄 تازه‌سازی</button>
-<button id="clearAllOrdersBtn">حذف همه سفارش‌ها</button>
-</div>
-
-<table id="ordersTable">
-<thead>
-<tr>
-<th>نام مشتری</th>
-<th>تلفن</th>
-<th>آدرس</th>
-<th>محصولات</th>
-<th>تاریخ</th>
-<th>عملیات</th>
-<th>موجودی</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</section></main>
-
-<script>
-// --- داده‌های پیش‌فرض ---
-if(!localStorage.getItem("products")){
-localStorage.setItem("products",JSON.stringify([
-{id:"1",name:"دفتر گل‌گلی",price:120000,image:"img/bflow1.jpg",category:"لوازم‌تحریر",stock:5},
-{id:"2",name:"ماگ عشق",price:85000,image:"img/mag1.jpg",category:"ماگ",stock:3},
-{id:"3",name:"شمع معطر",price:55000,image:"img/condle1.jpg",category:"دکوری",stock:10},
-{id:"4",name:"کارت پستال قلبی",price:25000,image:"img/cart1.jpg",category:"لوازم‌تحریر",stock:7},
-{id:"5",name:"کیف دستی کوچک",price:180000,image:"img/bag1.jpg",category:"اکسسوری",stock:4},
-{id:"6",name:"گلدان سرامیکی",price:95000,image:"img/pot1.jpg",category:"دکوری",stock:6},
-{id:"7",name:"دفتر یادداشت کوچک",price:40000,image:"img/note1.jpeg",category:"لوازم‌تحریر",stock:12},
-{id:"8",name:"آویز قلبی",price:30000,image:"img/oiz1.jpg",category:"اکسسوری",stock:15}
-]));
-}
-
-let products = JSON.parse(localStorage.getItem("products"));
-let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-
-const productList=document.getElementById("productList");
-function displayProducts(){
-productList.innerHTML="";
-products.forEach(p=>{
-const card=document.createElement("div");
-card.className="card";
-card.innerHTML=`
-<img src="${p.image}" alt="${p.name}">
-<div>${p.name}</div>
-<div class="price">${p.price.toLocaleString()} تومان</div>
-<div class="stock">موجودی: ${p.stock}</div>
-<button ${p.stock===0?'disabled':''} onclick="addToCart('${p.id}')">افزودن به سبد</button>
-<a href="product.html?id=${p.id}" class="btn">جزئیات</a>
-`;
-productList.appendChild(card);
-});
-updateCategoryOptions();
-}
-
-function addToCart(id){
-const product = products.find(p => p.id === id);
-if(product && product.stock > 0){
-cart.push({...product});
-product.stock--;
-updateCart();
-}
-}
-
-function updateCart(){
-localStorage.setItem("cart",JSON.stringify(cart));
-localStorage.setItem("products",JSON.stringify(products));
-displayProducts();
-displayOrders();
-}
-
-function updateCategoryOptions(){
-const select = document.getElementById("categorySelect");
-select.innerHTML='<option value="all">همه دسته‌ها</option>';
-[...new Set(products.map(p=>p.category))].forEach(c=>{
-const o=document.createElement("option");
-o.value=c;
-o.textContent=c;
-select.appendChild(o);
-});
-}
-
-const adminTab=document.getElementById("adminTab");
-const storeTab=document.getElementById("storeTab");
-const adminView=document.getElementById("adminView");
-const storeView=document.getElementById("storeView");
-const ordersTable=document.getElementById("ordersTable").querySelector("tbody");
-
-adminTab.addEventListener("click",()=>{
-storeView.style.display="none";
-adminView.style.display="block";
-adminTab.classList.add("active");
-storeTab.classList.remove("active");
-displayOrders();
-});
-storeTab.addEventListener("click",()=>{
-storeView.style.display="block";
-adminView.style.display="none";
-storeTab.classList.add("active");
-adminTab.classList.remove("active");
-});
-
-function displayOrders(){
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-ordersTable.innerHTML="";
-if(orders.length===0){
-ordersTable.innerHTML=`<tr class="empty-row"><td colspan="7">سفارشی موجود نیست</td></tr>`;
-return;
-}
-orders.forEach((o,i)=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`
-<td>${o.name}</td>
-<td>${o.phone}</td>
-<td>${o.address}</td>
-<td>${o.products.map(p=>p.name).join(", ")}</td>
-<td>${o.date}</td>
-<td><button style="background:#e24b4b;padding:4px 6px;" onclick="deleteOrder(${i})">❌</button></td>
-<td>${updateStockInput(o.products)}</td>
-`;
-ordersTable.appendChild(tr);
-});
-}
-
-function deleteOrder(index){
-let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-orders.splice(index,1);
-localStorage.setItem("orders",JSON.stringify(orders));
-displayOrders();
-}
-
-document.getElementById("clearAllOrdersBtn").addEventListener("click",()=>{
-if(confirm("آیا مطمئن هستید همه سفارش‌ها حذف شوند؟")){
-localStorage.setItem("orders","[]");
-displayOrders();
-}
-});
-
-document.getElementById("refreshBtn").addEventListener("click",displayOrders);
-
-function updateStockInput(orderProducts){
-return orderProducts.map(p=>{
-const prod = products.find(pr => pr.id===p.id);
-return `<input type="number" style="width:60px" value="${prod.stock}" onchange="changeStock('${p.id}',this.value)">`;
-}).join("<br>");
-}
-
-function changeStock(id,value){
-const prod=products.find(p=>p.id===id);
-if(prod){
-prod.stock=parseInt(value);
-updateCart();
-}
-}
-
-// --- فیلتر و جستجوی محصولات ---
-document.getElementById("searchInput").addEventListener("input",(e)=>{
-const val=e.target.value.toLowerCase();
-products.forEach(p=>{
-const card=document.querySelector(`.card img[alt='${p.name}']`)?.parentElement;
-if(card) card.style.display = p.name.toLowerCase().includes(val) ? "block" : "none";
-});
-});
-
-document.getElementById("sortSelect").addEventListener("change",(e)=>{
-if(e.target.value==="price-asc") products.sort((a,b)=>a.price-b.price);
-else if(e.target.value==="price-desc") products.sort((a,b)=>b.price-a.price);
-displayProducts();
-});
-
-document.getElementById("categorySelect").addEventListener("change",(e)=>{
-const val=e.target.value;
-products.forEach(p=>{
-const card=document.querySelector(`.card img[alt='${p.name}']`)?.parentElement;
-if(card) card.style.display = (val==="all" || p.category===val) ? "block":"none";
-});
-});
-
-// --- نمایش اولیه ---
-displayProducts();
-updateCart();
-displayOrders();
-</script>
-
 </body>
 </html>
