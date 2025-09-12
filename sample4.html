@@ -1,215 +1,87 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>جدول برنامه هفتگی تعاملی</title>
-<style>
-body {
-  font-family:'Vazir', sans-serif;
-  margin:0;
-  padding:2rem;
-  background:#1e3c72;
-  background: linear-gradient(135deg,#2a5298,#1e3c72);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-}
-
-.table-container {
-  width:100%;
-  max-width:1100px;
-  overflow-x:auto;
-  padding:1rem;
-  border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.4);
-  background: rgba(255,255,255,0.95);
-  position:relative;
-
-  scroll-behavior: smooth; /* اسکرول روان */
-  -webkit-overflow-scrolling: touch; /* موبایل و تاچ */
-}
-
-h2 {
-  text-align:center;
-  color:#fff;
-  text-shadow:0 2px 10px rgba(0,0,0,0.5);
-  margin-bottom:1rem;
-  font-size:2rem;
-}
-
-table {
-  width:100%;
-  border-collapse: separate;
-  border-spacing:0 12px;
-  min-width:700px;
-}
-
-th, td {
-  padding:14px 18px;
-  text-align:center;
-  border-radius:12px;
-  font-weight:bold;
-  transition: all 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  color:#fff;
-  cursor:pointer;
-  position:relative;
-}
-
-thead th {
-  background: linear-gradient(90deg,#6a11cb,#2575fc);
-  color:#fff;
-  font-size:1rem;
-}
-
-tbody td {
-  background: linear-gradient(270deg,#ff6b6b,#feca57,#48dbfb,#ff6b6b);
-  background-size: 800% 800%;
-  animation: gradientWave 15s ease infinite;
-  box-shadow:0 4px 15px rgba(0,0,0,0.2);
-}
-
-tbody td:first-child {
-  background: #4f46e5;
-  font-weight:bold;
-  animation:none;
-}
-
-tbody td:hover {
-  transform: scale(1.15);
-  box-shadow:0 10px 35px rgba(0,0,0,0.5);
-  z-index:2;
-}
-
-/* کارت بازشو */
-.popover {
-  position:absolute;
-  background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb);
-  padding:10px 15px;
-  border-radius:15px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.4);
-  color:#222;
-  font-size:0.9rem;
-  white-space: nowrap;
-  pointer-events:none;
-  opacity:0;
-  transform: translate(-50%, -120%) scale(0.7);
-  transition: all 0.3s ease;
-  z-index:10;
-}
-
-.popover.show {
-  opacity:1;
-  transform: translate(-50%, -120%) scale(1);
-}
-
-@keyframes gradientWave {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-.past { opacity:0.5; }
-.current { box-shadow:0 6px 25px rgba(0,0,0,0.6); transform:scale(1.1); }
-.future { opacity:0.9; }
-
-@media(max-width:768px){
-  th,td{padding:10px;font-size:0.85rem;}
-}
-@media(max-width:480px){
-  table{min-width:400px;}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جدول برنامه هفتگی</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="table-container">
-  <h2>📅 جدول برنامه هفتگی تعاملی</h2>
-  <table id="schedule">
-    <thead>
-      <tr>
-        <th>روز</th>
-        <th>۸-۱۰</th>
-        <th>۱۰-۱۲</th>
-        <th>۱۲-۱۴</th>
-        <th>۱۴-۱۶</th>
-        <th>۱۶-۱۸</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr data-day="0"><td>شنبه</td><td>ورزش</td><td>کلاس</td><td>ناهار</td><td>مطالعه</td><td>استراحت</td></tr>
-      <tr data-day="1"><td>یکشنبه</td><td>مطالعه</td><td>تمرین</td><td>ناهار</td><td>پروژه</td><td>فیلم</td></tr>
-      <tr data-day="2"><td>دوشنبه</td><td>مدیتیشن</td><td>کلاس</td><td>ناهار</td><td>مطالعه</td><td>موزیک</td></tr>
-      <tr data-day="3"><td>سه‌شنبه</td><td>ورزش</td><td>مطالعه</td><td>ناهار</td><td>تمرین</td><td>کتاب</td></tr>
-      <tr data-day="4"><td>چهارشنبه</td><td>پروژه</td><td>تمرین</td><td>ناهار</td><td>کلاس</td><td>استراحت</td></tr>
-      <tr data-day="5"><td>پنج‌شنبه</td><td>مطالعه</td><td>کلاس</td><td>ناهار</td><td>فیلم</td><td>دوستان</td></tr>
-      <tr data-day="6"><td>جمعه</td><td>ورزش</td><td>کتاب</td><td>ناهار</td><td>خانواده</td><td>استراحت</td></tr>
-    </tbody>
-  </table>
-  <div class="popover" id="popover"></div>
-</div>
+  <header>
+    <h2>📅 جدول برنامه هفتگی</h2>
+  </header>
 
-<script>
-const scheduleTable = document.getElementById('schedule');
-const popover = document.getElementById('popover');
-const now = new Date();
-const currentHour = now.getHours();
-const currentDay = now.getDay() === 0 ? 6 : now.getDay()-1; 
-
-const hourRanges = [
-  {start:8,end:10},
-  {start:10,end:12},
-  {start:12,end:14},
-  {start:14,end:16},
-  {start:16,end:18}
-];
-
-function updateTable() {
-  const rows = scheduleTable.tBodies[0].rows;
-  for(let r=0;r<rows.length;r++){
-    const row = rows[r];
-    for(let c=1;c<row.cells.length;c++){
-      const cell = row.cells[c];
-      cell.style.color='#fff';
-      if(r===currentDay){
-        const range = hourRanges[c-1];
-        if(currentHour>=range.start && currentHour<range.end){
-          cell.classList.add('current');
-          cell.classList.remove('past','future');
-        } else if(currentHour<range.start){
-          cell.classList.add('future');
-          cell.classList.remove('past','current');
-        } else {
-          cell.classList.add('past');
-          cell.classList.remove('current','future');
-        }
-      } else {
-        cell.classList.add('past');
-        cell.classList.remove('current','future');
-      }
-
-      cell.dataset.info = `روز ${row.cells[0].textContent}, ساعت ${scheduleTable.tHead.rows[0].cells[c].textContent}: ${cell.textContent}`;
-    }
-  }
-}
-
-updateTable();
-setInterval(updateTable,60000);
-
-scheduleTable.addEventListener('mousemove', (e)=>{
-  const cell = e.target.closest('td');
-  if(cell && cell.dataset.info){
-    popover.textContent = cell.dataset.info;
-    const rect = cell.getBoundingClientRect();
-    popover.style.top = (rect.top + window.scrollY - 10) + 'px';
-    popover.style.left = (rect.left + rect.width/2 + window.scrollX) + 'px';
-    popover.classList.add('show');
-  }
-});
-
-scheduleTable.addEventListener('mouseleave', ()=>{
-  popover.classList.remove('show');
-});
-</script>
+  <main class="table-container">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>روز</th>
+          <th>۸-۱۰</th>
+          <th>۱۰-۱۲</th>
+          <th>۱۲-۱۴</th>
+          <th>۱۴-۱۶</th>
+          <th>۱۶-۱۸</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>شنبه</td>
+          <td>ورزش</td>
+          <td>کلاس</td>
+          <td>ناهار</td>
+          <td>مطالعه</td>
+          <td>استراحت</td>
+        </tr>
+        <tr>
+          <td>یکشنبه</td>
+          <td>مطالعه</td>
+          <td>تمرین</td>
+          <td>ناهار</td>
+          <td>پروژه</td>
+          <td>فیلم</td>
+        </tr>
+        <tr>
+          <td>دوشنبه</td>
+          <td>مدیتیشن</td>
+          <td>کلاس</td>
+          <td>ناهار</td>
+          <td>مطالعه</td>
+          <td>موزیک</td>
+        </tr>
+        <tr>
+          <td>سه‌شنبه</td>
+          <td>ورزش</td>
+          <td>مطالعه</td>
+          <td>ناهار</td>
+          <td>تمرین</td>
+          <td>کتاب</td>
+        </tr>
+        <tr>
+          <td>چهارشنبه</td>
+          <td>پروژه</td>
+          <td>تمرین</td>
+          <td>ناهار</td>
+          <td>کلاس</td>
+          <td>استراحت</td>
+        </tr>
+        <tr>
+          <td>پنج‌شنبه</td>
+          <td>مطالعه</td>
+          <td>کلاس</td>
+          <td>ناهار</td>
+          <td>فیلم</td>
+          <td>دوستان</td>
+        </tr>
+        <tr>
+          <td>جمعه</td>
+          <td>ورزش</td>
+          <td>کتاب</td>
+          <td>ناهار</td>
+          <td>خانواده</td>
+          <td>استراحت</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
 </body>
 </html>

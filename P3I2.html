@@ -74,7 +74,7 @@ const sounds = {
 function startGame(){
   clearInterval(timer); time=0; moves=0; matchedCount=0; flippedCards=[];
   timeSpan.textContent="⏱️ زمان: 0 ثانیه"; movesSpan.textContent="🔄 حرکات: 0"; board.innerHTML="";
-  document.querySelector('.controls button:last-child').disabled=false;
+  document.querySelector('.controls button:last-child').disabled=false; // فعال کردن دکمه نمایش کارت
   let tempCards=[...cardsImages,...cardsImages].sort(()=>Math.random()-0.5);
   cards=tempCards.map((img,index)=>{
     const card=document.createElement("div");
